@@ -29,7 +29,8 @@ class DecisionTree
     return DecisionTree.new(examples[0].label) if examples_have_same_label?(examples)
 
     feature = get_best_feature(features, examples)
-    puts "Best feature is #{feature}"
+
+
 
     # TODO: This. This so hard in the face.
   end
@@ -51,14 +52,17 @@ class DecisionTree
 
     features.each do |feature|
       score = 0
-      examples.each { |e| score += 1 if e.send(feature) }
+      examples.each { |e| score += 1 if Name.to_label(e.send(feature)) == e.label }
 
       if score > highest_score
         highest_score = score
         best_feature = feature
       end
+
+      puts "\t#{feature} => #{score}"
     end
 
+    puts "Best feature is \"#{best_feature}\" at score #{highest_score}"
     best_feature
   end
 end
