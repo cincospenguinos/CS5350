@@ -10,7 +10,7 @@ class SolutionCLI < Thor
   desc 'Grabs training data', 'Grabs training data for HW 1'
   def train
     puts 'Grabbing the training data...'
-    gather_data('Dataset/training.data')
+    data = gather_data('Dataset/training.data')
   end
 
   desc 'Runs test', 'Runs the test with the test data'
@@ -32,7 +32,7 @@ class SolutionCLI < Thor
       data << Name.new(full_name, label)
     end
 
-    puts data.inspect
+    data
   end
 end
 
