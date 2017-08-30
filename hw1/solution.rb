@@ -9,8 +9,10 @@ class SolutionCLI < Thor
   
   desc 'Grabs training data', 'Grabs training data for HW 1'
   def train
-    puts 'Grabbing the training data...'
     data = gather_data('Dataset/training.data')
+    features = Name.instance_methods(false) # The instance methods will define our features
+    tree = DecisionTree.new
+    tree.learn(data, features)
   end
 
   desc 'Runs test', 'Runs the test with the test data'

@@ -8,6 +8,11 @@ class DecisionTree
   end
 
   ## Uses the ID3 learning algorithm
-  def learn_tree(examples, attributes, label)
+  def learn(examples, attributes)
+  end
+
+  private
+
+  def id3(examples, attributes, target_label)
   end
 end
