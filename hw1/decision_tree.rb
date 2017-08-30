@@ -59,7 +59,7 @@ class DecisionTree
         best_feature = feature
       end
 
-      puts "\t#{feature} => #{score}"
+      # puts "\t#{feature} => #{score}"
     end
 
     puts "Best feature is \"#{best_feature}\" at score #{highest_score}"
