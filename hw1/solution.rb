@@ -1,22 +1,24 @@
 # solution.rb
+
 # Solution to HW 1 for CS 5350
 require 'thor'
 
 require_relative 'decision_tree'
 require_relative 'name'
 
+# Class that sets up a command line argument
 class SolutionCLI < Thor
   
   desc 'Grabs training data', 'Grabs training data for HW 1'
   def train
     data = gather_data('Dataset/training.data')
-    features = Name.instance_methods(false) # The instance methods will define our features
-    tree = DecisionTree.new
-    tree.learn(data, features)
+    features = Name.instance_methods(false) - [:label]# The instance methods will define our features
+    tree = DecisionTree.learn(data, features, [:+, :-])
+    puts tree.inspect
   end
 
   desc 'Runs test', 'Runs the test with the test data'
-  def run_test
+  def test
     puts 'Running test...'
   end
 

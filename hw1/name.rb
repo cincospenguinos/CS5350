@@ -6,6 +6,8 @@ class Name
   @@ACCEPTABLE_LABELS = [:+, :-]
   @@VOWELS = %s(a e i o u)
 
+  attr_reader :label
+
   def initialize(full_name, label)
     raise RuntimeError, "#{label} is not an acceptable label!" unless label.is_a?(Symbol) && @@ACCEPTABLE_LABELS.include?(label)
 
@@ -41,6 +43,11 @@ class Name
   ## true if the length of the last name is even
   def last_name_length_even
     last_name.length % 2 == 0
+  end
+
+  ## class method checking to see if the provided label is acceptable
+  def self.acceptable_label?(label)
+    @@ACCEPTABLE_LABELS.include?(label)
   end
 
   private
