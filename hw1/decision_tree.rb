@@ -34,19 +34,7 @@ class DecisionTree
 
     root = DecisionTree.new
 
-    @@acceptable_labels.each do |label|
-      child = DecisionTree.new
-
-      subset = get_subset(examples, best_feature, label)
-
-      if subset.length == 0
-        child.guess = label
-      else
-        child = id3(subset, features - [best_feature], label)
-      end
-
-      root.children[best_feature] = child
-    end
+    
 
     root
   end
@@ -78,7 +66,7 @@ class DecisionTree
       # puts "\t#{feature} => #{score}"
     end
 
-    # puts "Best feature is \"#{best_feature}\" at score #{highest_score}"
+    puts "Best feature is \"#{best_feature}\" at score #{highest_score}"
     best_feature
   end
 
