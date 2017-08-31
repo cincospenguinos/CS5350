@@ -1,0 +1,54 @@
+\section{Linear Classifier}
+\label{sec:q2}
+
+In the questions in this section, we have four features $x_1, x_2, x_3$ and $x_4$ and the label is represented by $o$.
+\begin{enumerate}
+    \item~[5 points] Write a linear classifier that correctly classifies the given dataset. You don’t need to run any learning algorithm here. Try to find the weights and the bias of the classifier using the definition of linear separators.
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{cccc|c}
+            $x_1$ & $x_2$ & $x_3$ & $x_4$ & $o$  \\ \hline
+            1  & 0  & 1  & 1  & 1  \\
+            0  & 1  & 0  & 1  & 1  \\
+            0  & 0  & 1  & 0  & -1
+            \end{tabular}
+        \end{table}
+
+    \item~[5 points] Suppose the dataset below is an extension of the above dataset.
+        Check if your classifier from the previous question correctly classifies the dataset.
+        Report its accuracy.
+
+        \begin{table}[h]
+        \centering
+        \begin{tabular}{cccc|c}
+            x1 & x2 & x3 & x4 & o  \\ \hline
+            0  & 0  & 0  & 1  & 1  \\
+            0  & 0  & 1  & 1  & 1  \\
+            0  & 0  & 0  & 0  & -1 \\
+            1  & 0  & 1  & 0  & 1  \\
+            1  & 1  & 0  & 0  & 1  \\
+            1  & 1  & 1  & 1  & 1  \\
+            1  & 1  & 1  & 0  & 1  \\
+        \end{tabular}
+        \end{table}
+
+    \item~[10 points] Given the remaining missing data points of the above dataset in the table below, find a linear classifier that correctly classifies the whole dataset (all three tables together)
+        \begin{table}[h]
+        \centering
+        \begin{tabular}{cccc|c}
+            x1 & x2 & x3 & x4 & o  \\ \hline
+            0  & 1  & 0  & 0  & -1 \\
+            0  & 1  & 1  & 0  & -1 \\
+            0  & 1  & 1  & 1  & 1  \\
+            1  & 0  & 0  & 0  & 1  \\
+            1  & 0  & 0  & 1  & 1  \\
+            1  & 1  & 0  & 1  & 1  \\
+            \end{tabular}
+        \end{table}
+\end{enumerate}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "hw"
+%%% End:

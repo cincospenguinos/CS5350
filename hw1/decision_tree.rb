@@ -35,10 +35,19 @@ class DecisionTree
     root = DecisionTree.new
 
     @@acceptable_labels.each do |label|
-      # TODO: Add a new child to root where feature => true
+      child = DecisionTree.new
+
+      subset = get_subset(examples, best_feature, label)
+
+      if subset.length == 0
+        child.guess = label
+      else
+        child = id3(subset, features - [best_feature], label)
+      end
+
+      root.children[best_feature] = child
     end
 
-    # TODO: This. This so hard in the face.
     root
   end
 
@@ -59,7 +68,7 @@ class DecisionTree
 
     features.each do |feature|
       score = 0
-      examples.each { |e| score += 1 if Name.to_label(e.send(feature)) == e.label }
+      examples.each { |e| score += 1 if Name.to_label(e.send(feature)) == e.label } # TODO: Are we sure this is accurate?
 
       if score > highest_score
         highest_score = score
@@ -71,6 +80,12 @@ class DecisionTree
 
     # puts "Best feature is \"#{best_feature}\" at score #{highest_score}"
     best_feature
+  end
+
+  def self.get_subset(examples, feature, label)
+    remove = []
+    examples.each { |e| remove << e if e.label != label }
+    examples - remove
   end
 end
 

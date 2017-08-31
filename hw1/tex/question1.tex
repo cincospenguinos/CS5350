@@ -1,0 +1,82 @@
+\section{Decision Tree}
+\label{sec:q1}
+
+\begin{enumerate}
+    \item~[6 points] Write the following Boolean functions as decision trees. (You can write your decision trees as a series of if-then-else statements, or use your favorite drawing program to draw a tree. You can use 1 to represent True and 0 to represent False.)
+        \begin{enumerate}
+            \item $(x_1\wedge x_2)\vee (x_1 \wedge x_3)$
+            \item $(x_1\wedge x_2) \text{ xor } x_3$
+            \item $\neg A \lor \neg B \lor \neg C \lor \neg D$
+        \end{enumerate}
+
+    \item~[24 points] In this problem, we are going to predict whether aliens will invade the earth using a decision tree classifier.
+    The training data is given in Table~\ref{tb-alien-train}.
+    Build a decision tree to decide whether an alien civilization will invade the earth.
+    There are four features:
+    \begin{enumerate}
+        \item\textbf{Superior Technology} (\textit{Yes or No}) means whether or not the alien's technology is superior to earth's.
+        \item\textbf{Environment} (\textit{Yes or No}) means whether the environment on earth is suitable for this alien race.
+        \item\textbf{Human} (\textit{Dont Care, Like, Hate}) describes how the aliens feel about human-beings.
+        \item\textbf{Distance} (\textit{$1,2,3,4$ lightyears}) describes how far is the aliens are from earth.
+    \end{enumerate}
+
+        \begin{table}[h]
+        \centering
+        \begin{tabular}{cccc|c}
+        \hline
+        Technology & Environment & Human      & Distance & Invade? \\ \hline
+        No        & Yes         & Not Care   & 1       & Yes      \\
+        No        & Yes         & Like       & 3       & No       \\
+        No        & No          & Not Care   & 4       & Yes      \\
+        Yes       & Yes         & Like       & 3       & Yes      \\
+        Yes       & No          & Like       & 1       & No       \\
+        No        & Yes         & Not Care   & 2       & Yes      \\
+        No        & No          & Hate       & 4       & No       \\
+        No        & Yes         & Not Care   & 3       & Yes      \\
+        Yes       & No          & Like       & 4       & No       \\ \hline
+        \end{tabular}
+        \caption{Training data for the alien invasion problem.}\label{tb-alien-train}
+        \end{table}
+
+
+        \begin{enumerate}
+            \item~[5 points] How many possible functions are there to map these four features to a boolean decision? How many functions are consistent with the given training dataset?
+            \item~[3 points] What is the entropy of the labels in this data? When calculating entropy, the base of the logarithm should be base 2.
+            \item~[4 points] What is the information gain of each of the features?
+            \item~[1 points] Which attribute will you use to construct the root of the tree using the ID3 algorithm?
+            \item~[8 points] Using the root that you selected in the previous question, construct a decision tree that represents the data. You do not have to use the ID3 algorithm here, you can show any tree with the chosen root.
+            \item~[3 points] Suppose you are given three more examples, listed in Table~\ref{tb-alien-test}. Use your decision tree to predict the label for each example. Also report the accuracy of the classifier that you have learned.
+        \end{enumerate}
+
+        \begin{table}[h]
+        \centering
+        \begin{tabular}{cccc|c}
+        \hline
+        Technology & Environment & Human & Distance & Invade? \\ \hline
+        Yes        & Yes         & Like  & 2        & No       \\
+        No         & No          & Hate  & 3        & No       \\
+        Yes        & Yes         & Lkie  & 4        & Yes       \\ \hline
+        \end{tabular}
+        \caption{Test data for alien invasion problem}\label{tb-alien-test}
+        \end{table}
+
+    \item~[10 points] Recall that in the ID3 algorithm, we want to identify the best attribute that splits the examples that are relatively pure in one label.
+    Apart from entropy, which you used in the previous question, there are other methods to measure impurity.
+
+    We will now develop another heuristic for learning decision trees instead of ID3. If, at some node, we stopped growing the tree and assign the majority label of the remaining examples at that node, then the empirical error on the training set at that node will be
+    %
+    $$MajorityError = 1 - \max_{i}p_i$$
+    %
+    where, $p_i$ is the fraction of examples that are labeled with the $i^{th}$ label. Notice that $MajorityError$ can be thought of as a measure of impurity just like entropy.
+
+    \begin{enumerate}
+        \item~[6 points] Using the $MajorityError$ measure, calculate the information gain for the four features respectively. Use 3 significant digits.
+        \item~[4 points] According to your results in the last question, which attribute should be the root for the decision tree? Do these two measures (entropy and majority error) lead to the same tree?
+    \end{enumerate}
+
+\end{enumerate}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "hw"
+%%% End:
