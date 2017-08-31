@@ -30,13 +30,9 @@ class DecisionTree
   ## Returns a decision tree from the examples and given features
   def self.id3(examples, features, target_label)
     return DecisionTree.new(examples[0].label) if examples_have_same_label?(examples)
-    best_feature = get_best_feature(features, examples)
+    best_feature = get_best_feature(features, examples, target_label)
 
-    root = DecisionTree.new
 
-    
-
-    root
   end
 
   ## Helper method. Returns true if all the examples have the same label
@@ -50,30 +46,20 @@ class DecisionTree
   end
 
   ## Returns the best feature in the collection that matches the most examples
-  def self.get_best_feature(features, examples)
-    best_feature = nil
-    highest_score = 0
-
-    features.each do |feature|
-      score = 0
-      examples.each { |e| score += 1 if Name.to_label(e.send(feature)) == e.label } # TODO: Are we sure this is accurate?
-
-      if score > highest_score
-        highest_score = score
-        best_feature = feature
-      end
-
-      # puts "\t#{feature} => #{score}"
-    end
-
-    puts "Best feature is \"#{best_feature}\" at score #{highest_score}"
-    best_feature
+  def self.get_best_feature(features, examples, target_label)
+    # TODO: This
+    entropy(examples)
   end
 
-  def self.get_subset(examples, feature, label)
-    remove = []
-    examples.each { |e| remove << e if e.label != label }
-    examples - remove
+  ## Returns the entropy value of the set provided
+  def self.entropy(examples)
+    pluses = 0
+    examples.each { |e| pluses += 1 if e.label == :+ }
+    minuses = examples.length - pluses
+    pluses /= examples.length
+    minuses /= examples.length
+
+    return -pluses * Math::log(pluses, 2) - minuses * Math::log(minuses, 2)
   end
 end
 

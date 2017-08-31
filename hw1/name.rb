@@ -3,7 +3,7 @@
 
 class Name
 
-  @@ACCEPTABLE_LABELS = [:+, :-] ### NOTE: Let :+ be equal to "true", and :- be equal to "false"
+  @@ACCEPTABLE_LABELS = [:+, :-]
   @@VOWELS = %w(a e i o u)
 
   attr_reader :label
@@ -48,17 +48,6 @@ class Name
   ## class method checking to see if the provided label is acceptable
   def self.acceptable_label?(label)
     @@ACCEPTABLE_LABELS.include?(label)
-  end
-
-  ## class method that converts the var passed to a label
-  def self.to_label(var)
-    raise RuntimeError, "#{var} is not a valid input to convert to a label!" unless var == true || var == false
-
-    if var
-      return :+
-    else
-      return :-
-    end
   end
 
   private
