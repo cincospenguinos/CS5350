@@ -24,28 +24,6 @@ class DecisionTree
     @children[name.send(@guess)].guess_for(name)
   end
 
-  # To help with debugging
-  def to_s(levels=0)
-    str = ""
-    levels.times { str += "\t" }
-
-    if is_guess?
-      str += @guess.to_s
-    else
-      @children.each do |feature, values|
-        str += feature.to_s + "\n"
-
-        values.each do |value, tree|
-          levels.times { str += "\t" }
-          str += value.to_s
-          str += tree.to_s
-        end
-      end
-    end
-
-    str
-  end
-
   ## CLASS METHODS --- Where the magic happens
 
   def self.learn(examples, features, acceptable_labels)
@@ -89,24 +67,14 @@ class DecisionTree
   def self.get_best_feature_info_gains(features, examples)
     total_entropy = entropy(examples)
     info_gains = {}
-    # puts "Total entropy is #{total_entropy}"
 
     features.each do |f|
       subset = get_all_that_matches(f, examples)
-      the_gains = information_gain(total_entropy, examples.size, subset)
-      # puts "Info gain of #{f} is #{the_gains}"
+      the_gains = information_gain(examples, subset)
       info_gains[f] = the_gains
     end
 
     info_gains.key(info_gains.values.max)
-  end
-
-  def self.get_best_feature_majority_error(features, examples)
-    # TODO: This
-    features.each do |f|
-      subset = get_all_that_matches(f, examples)
-
-    end
   end
 
   def self.information_gain(complete_set, subset)
