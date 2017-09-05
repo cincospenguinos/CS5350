@@ -5,6 +5,7 @@ class Name
 
   @@ACCEPTABLE_LABELS = [:+, :-]
   @@VOWELS = %w(a e i o u)
+  @@POSSIBLE_VALUES = [true, false]
 
   attr_reader :label
 
@@ -48,6 +49,10 @@ class Name
   ## class method checking to see if the provided label is acceptable
   def self.acceptable_label?(label)
     @@ACCEPTABLE_LABELS.include?(label)
+  end
+
+  def self.possible_values
+    @@POSSIBLE_VALUES.freeze
   end
 
   private
