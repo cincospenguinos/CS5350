@@ -50,7 +50,7 @@ class DecisionTree
 
   def self.learn(examples, features, acceptable_labels)
     @@acceptable_labels = acceptable_labels
-    return id3(examples, features, @@acceptable_labels[0])
+    return id3(examples, features, @@acceptable_labels[1])
   end
 
   private
@@ -58,16 +58,17 @@ class DecisionTree
   ## Returns a decision tree from the examples and given features
   def self.id3(examples, features, target_label)
     return DecisionTree.new(examples[0].label) if examples_have_same_label?(examples)
+    return DecisionTree.new(get_most_common_label(examples)) if features.length == 0
+
     best_feature = get_best_feature_info_gains(features, examples)
     subset = get_all_that_matches(best_feature, examples)
     node = DecisionTree.new(best_feature)
 
-    Name.possible_values.each do |val|
-      # byebug
+    Name.possible_values(best_feature).each do |val|
       if subset.size == 0
         node.children[val] = DecisionTree.new(get_most_common_label(examples))
       else
-        node.children[val] = id3(subset, features - [ best_feature ], get_most_common_label(subset))
+        node.children[val] = id3(subset, features - [ best_feature ], target_label)
       end
     end
 
@@ -108,27 +109,24 @@ class DecisionTree
     end
   end
 
-  def self.information_gain(total_entropy, total_size, subset)
-    # TODO: This is off, I think. We need to calculate this differently, maybe? Just look at it.
-    return 0 if subset.size == 0
-    raise RuntimeError, "subset has entropy that is NaN!" if entropy(subset).nan?
-    total_entropy - subset.size.to_f / total_size.to_f * entropy(subset)
+  def self.information_gain(complete_set, subset)
+    total_entropy = entropy(complete_set)
+
+    gain = 0.0
+
+
+    total_entropy - entropy(subset)
   end
 
   ## Returns the entropy value of the set provided
   def self.entropy(set)
     raise RuntimeError, "set cannot be empty!" if set.size == 0
     pluses = 0.0
-    set.each { |e| pluses += 1 if e.label == :+ }
-    minuses = set.size.to_f - pluses.to_f
-
+    set.each { |e| pluses += 1.0 if e.label == :+ }
     pluses /= set.size.to_f
-    minuses /= set.size.to_f
+    minuses = 1.0 - pluses
 
-    pluses != 0.0 ? p_log = Math::log(pluses, 2) : p_log = 0.0
-    minuses != 0.0 ? m_log = Math::log(minuses, 2) : m_log = 0.0
-
-    -pluses * p_log - minuses * m_log
+    -pluses * log(pluses) - minuses * log(minuses)
   end
 
   def self.get_all_that_matches(feature, examples)
@@ -139,13 +137,17 @@ class DecisionTree
   def self.get_most_common_label(examples)
     pluses = 0
     examples.each { |e| pluses += 1 if e.label == :+}
-    minuses = examples.size - pluses
     
-    if pluses > minuses
+    if pluses >= examples.size / 2
       :+
     else
       :-
     end
+  end
+
+  def self.log(number)
+    return 0.0 if number == 0.0
+    Math::log(number, 2)
   end
 end
 

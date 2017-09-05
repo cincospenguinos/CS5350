@@ -13,7 +13,7 @@ class SolutionCLI < Thor
   def train
     data = gather_data('Dataset/CVSplits/training03.data')
     features = Name.instance_methods(false) - [:label]# The instance methods will define our features
-    tree = DecisionTree.learn(data, features, [:+, :-])
+    tree = get_best_tree
     run_on_test_data(tree)
   end
 
@@ -31,6 +31,38 @@ class SolutionCLI < Thor
     # puts "#{tree.guess_for(test_data[0])}"
     puts "There were #{successes} correct guesses for #{test_data.size} total names."
     puts tree.inspect
+  end
+
+  def get_best_tree
+    validations = [0, 1, 2, 3]
+    success_rate = 0.0
+    best_tree = nil
+
+    validations.each do |val|
+      cross_validation = gather_data("Dataset/CVSplits/training0#{val}.data")
+
+      data = []
+
+      (validations - [val]).each do |others|
+        data += gather_data("Dataset/CVSplits/training0#{others}.data")
+      end
+
+      tree = DecisionTree.learn(data, Name.instance_methods(false) - [:label], [:+, :-])
+      success = test_against(cross_validation, tree)
+
+      if success > success_rate
+        best_tree = tree
+        success_rate = success
+      end
+    end
+
+    best_tree
+  end
+
+  def test_against(data, tree)
+    successful_guesses = 0
+    data.each { |name| successful_guesses += 1 if tree.guess_for(name) == name.label }
+    successful_guesses.to_f / data.size.to_f
   end
 
   def gather_data(file_name)

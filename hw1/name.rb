@@ -31,6 +31,12 @@ class Name
     first_name[0] == first_name[-1]
   end
 
+  def last_name_has_two_or_more_vowels
+    vowel_count = 0
+    last_name.split('').each { |char| vowel_count += 1 if @@VOWELS.include?(char)}
+    vowel_count >= 2
+  end
+
   ## true if the first name comes before the last name alphabetically
   def first_name_before_last
     first_name < last_name
@@ -51,8 +57,13 @@ class Name
     @@ACCEPTABLE_LABELS.include?(label)
   end
 
-  def self.possible_values
+  def self.possible_values(feature)
+    # TODO: return possible values for non-binary things
     @@POSSIBLE_VALUES.freeze
+  end
+
+  def self.all_features
+    Name.instance_methods(false) - [ :label ]
   end
 
   private

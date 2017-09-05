@@ -2,7 +2,7 @@
 
 # To help me calculate the bullshit
 def log(number)
-  return 0 if number == 0.0
+  return 0 if number == 0.0 || number == 0
   Math::log(number, 2)
 end
 
@@ -16,6 +16,8 @@ def info_gain(values, total_entropy)
   gain = 0.0
 
   values.each do |number, positives|
+    number = 4.0 if number == 4.1
+    number = 3.0 if number == 3.1
     gain += entropy(positives, number) * number.to_f / 9.0
   end
 
@@ -26,8 +28,8 @@ end
 total_entropy = entropy(5, 9)
 technology = { 3 => 1, 6 => 4 }
 environment = { 5 => 4, 4 => 1 }
-human = { 4 => 1, 4 => 4, 1 => 1 }
-distance = { 2 => 1, 1 => 1, 3 => 2, 3 => 1 }
+human = { 4.0 => 1, 4.1 => 4, 1 => 1 }
+distance = { 2 => 1, 1 => 1, 3 => 2, 3.1 => 1 }
 
 puts "Technology: #{info_gain(technology, total_entropy)}"
 puts "Environment: #{info_gain(environment, total_entropy)}"
