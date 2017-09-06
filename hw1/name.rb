@@ -88,6 +88,15 @@ class Name
     Name.instance_methods(false) - [ :label ]
   end
 
+  def self.given_features
+    Name.instance_methods(false) - [ :label ] - Name.proposed_features
+  end
+
+  def self.proposed_features
+    [ :letter_first_name_first_letter, :letter_first_name_second_letter,
+      :cmp_first_and_second_letters_of_first_name, :first_name_starts_with_vowel ]
+  end
+
   def self.letter_features
     (Name.instance_methods(false) - [ :label ]).find_all { |f| f.to_s.start_with?('letter')}
   end

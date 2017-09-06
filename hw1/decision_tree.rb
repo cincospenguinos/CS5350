@@ -27,6 +27,14 @@ class DecisionTree
     @children[name.send(@guess)].guess_for(name)
   end
 
+  def max_depth
+    return 1 if is_guess?
+
+    max = 0
+    @children.each { |val, tree| max = tree.max_depth if tree.max_depth > max }
+    max + 1
+  end
+
   ## CLASS METHODS --- Where the magic happens
 
   def self.learn(examples, features, acceptable_labels, max_level)
@@ -55,7 +63,7 @@ class DecisionTree
     return DecisionTree.new(current_level, examples[0].label) if examples_have_same_label?(examples)
     return DecisionTree.new(current_level, get_most_common_label(examples)) if features.length == 0
     return DecisionTree.new(current_level, get_most_common_label(examples)) if max_level > 0 && current_level == max_level
-
+    
     best_feature = get_best_feature_info_gains(features, examples)
     node = DecisionTree.new(current_level, best_feature)
 
@@ -87,7 +95,7 @@ class DecisionTree
   def self.get_best_feature_info_gains(features, examples)
     total_entropy = entropy(examples)
     best_feature = nil
-    high_score = 0.0
+    high_score = -1.0
 
     features.each do |f|
       gain = information_gain(examples, f)
