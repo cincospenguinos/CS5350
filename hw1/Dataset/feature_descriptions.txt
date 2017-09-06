@@ -9,8 +9,3 @@ Here are some features that may be useful for classifying the badges dataset:
 6. Is the number of letters in their last name even?
 
 * Hint: be careful with lowercase vs. uppercase when making comparisons between letters!
-
-Here's some other features I came up with:
-
-* Are the total number of letters in their name even?
-* 

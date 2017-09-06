@@ -2,7 +2,6 @@
 
 Solutions to my Machine Learning assignments. *DO NOT USE MY CODE AS YOUR SOLUTION.* I do not condone cheating.
 
-## TODO:
+## What the hell!?
 
-- [ ] Add written work
-- [ ] Program the expirement stuff
+* Why doesn't the tree ever select a label other than +?

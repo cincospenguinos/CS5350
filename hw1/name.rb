@@ -5,7 +5,8 @@ class Name
 
   @@ACCEPTABLE_LABELS = [:+, :-]
   @@VOWELS = %w(a e i o u)
-  @@POSSIBLE_VALUES = [true, false]
+  @@LETTERS = %w(a b c d e f g h i j k l m n o p q r s t u v w x y z)
+  @@BINARY = [ true, false ]
 
   attr_reader :label
 
@@ -13,6 +14,8 @@ class Name
     raise RuntimeError, "#{label} is not an acceptable label!" unless label.is_a?(Symbol) && @@ACCEPTABLE_LABELS.include?(label)
 
     @full_name = full_name.downcase # We are storing these in lower case letters
+    @@LETTERS << first_name[0] unless @@LETTERS.include?(first_name[0])
+    @@LETTERS << first_name[1] unless @@LETTERS.include?(first_name[1])
     @label = label
   end
 
@@ -31,12 +34,6 @@ class Name
     first_name[0] == first_name[-1]
   end
 
-  def last_name_has_two_or_more_vowels
-    vowel_count = 0
-    last_name.split('').each { |char| vowel_count += 1 if @@VOWELS.include?(char)}
-    vowel_count >= 2
-  end
-
   ## true if the first name comes before the last name alphabetically
   def first_name_before_last
     first_name < last_name
@@ -52,24 +49,62 @@ class Name
     last_name.length % 2 == 0
   end
 
+  #### Here's some features I came up with ####
+
+  def letter_first_name_first_letter
+    raise RuntimeError, "#{first_name[0]} is not a valid letter! #{@full_name}" unless @@LETTERS.include?(first_name[0])
+    first_name[0]
+  end
+
+  def first_name_starts_with_vowel
+    @@VOWELS.include?(first_name[0])
+  end
+
+  def letter_first_name_second_letter
+    raise RuntimeError, "#{first_name[1]} is not a valid letter! #{@full_name}" unless @@LETTERS.include?(first_name[1])
+    first_name[1]
+  end
+
+  def cmp_first_and_second_letters_of_first_name
+    first_name[0] <=> first_name[1]
+  end
+
   ## class method checking to see if the provided label is acceptable
   def self.acceptable_label?(label)
     @@ACCEPTABLE_LABELS.include?(label)
   end
 
   def self.possible_values(feature)
-    # TODO: return possible values for non-binary things
-    @@POSSIBLE_VALUES.freeze
+    if letter_features.include?(feature)
+      @@LETTERS.clone.freeze
+    elsif feature.to_s.start_with?('cmp')
+      [-1, 0, 1].freeze
+    else
+      @@BINARY.clone.freeze
+    end
   end
 
   def self.all_features
     Name.instance_methods(false) - [ :label ]
   end
 
+  def self.letter_features
+    (Name.instance_methods(false) - [ :label ]).find_all { |f| f.to_s.start_with?('letter')}
+  end
+
+  def self.acceptable_labels
+    @@ACCEPTABLE_LABELS.freeze
+  end
+
   private
 
   def first_name
     @full_name.split(' ')[0]
+  end
+
+  def middle_name
+    split = @full_name.split(' ')
+    split.size >= 3 ? @full_name[1] : nil
   end
 
   def last_name

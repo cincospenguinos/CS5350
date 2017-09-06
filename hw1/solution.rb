@@ -8,51 +8,51 @@ require_relative 'name'
 
 # Class that sets up a command line argument
 class SolutionCLI < Thor
-  
-  desc 'Grabs training data', 'Grabs training data for HW 1'
-  def train
-    data = gather_data('Dataset/CVSplits/training03.data')
-    features = Name.instance_methods(false) - [:label]# The instance methods will define our features
-    tree = get_best_tree
-    run_on_test_data(tree)
-  end
-
   desc 'Runs test', 'Runs the test with the test data'
   def test
-    puts 'Running test...'
+    depths = [ 1, 2, 3, 4, 5, -1 ]
+    training_data = gather_data('Dataset/training.data')
+    test_data = gather_data('Dataset/test.data')
+
+    puts "Depth\tTrain\tTest"
+
+    depths.each do |depth|
+      tree = get_best_tree(depth)
+      training_success = test_against(training_data, tree)
+      test_success = test_against(test_data, tree)
+
+      puts "#{depth}\t#{training_success}\t#{test_success}"
+
+      # puts "#{depth} \t #{tree.inspect}"
+    end
   end
 
   private
 
-  def run_on_test_data(tree)
-    successes = 0
-    test_data = gather_data('Dataset/test.data')
-    test_data.each { |name| successes += 1 if tree.guess_for(name) == name.label } 
-    # puts "#{tree.guess_for(test_data[0])}"
-    puts "There were #{successes} correct guesses for #{test_data.size} total names."
-    puts tree.inspect
-  end
-
-  def get_best_tree
-    validations = [0, 1, 2, 3]
-    success_rate = 0.0
+  def get_best_tree(depth)
+    path = 'Dataset/CVSplits/training0'
     best_tree = nil
+    high_score = 0.0
 
-    validations.each do |val|
-      cross_validation = gather_data("Dataset/CVSplits/training0#{val}.data")
-
+    4.times do |validator_idx|
       data = []
+      validator = gather_data(path + validator_idx.to_s + '.data')
 
-      (validations - [val]).each do |others|
-        data += gather_data("Dataset/CVSplits/training0#{others}.data")
+      4.times do |data_collection|
+        next if data_collection == validator_idx
+        data += gather_data(path + data_collection.to_s + '.data')
       end
 
-      tree = DecisionTree.learn(data, Name.instance_methods(false) - [:label], [:+, :-])
-      success = test_against(cross_validation, tree)
+      tree = DecisionTree.learn(data, Name.all_features, Name.acceptable_labels, depth)
+      score = test_against(validator, tree)
 
-      if success > success_rate
+      # puts "Finished #{validator_idx}"
+
+      if score > high_score
+        high_score = score
         best_tree = tree
-        success_rate = success
+
+        # puts "High score! #{high_score} \t #{validator_idx}"
       end
     end
 
