@@ -54,18 +54,14 @@ class DecisionTree
   def self.id3(examples, features, target_label, current_level, max_level)
     return DecisionTree.new(current_level, examples[0].label) if examples_have_same_label?(examples)
     return DecisionTree.new(current_level, get_most_common_label(examples)) if features.length == 0
-    # puts "#{features.length}"
-    # TODO: id3 always returns the same guess, without fail, every time. What the hell!?
-
-    if max_level > 0 && current_level == max_level
-      return DecisionTree.new(current_level, get_most_common_label(examples))
-    end
+    return DecisionTree.new(current_level, get_most_common_label(examples)) if max_level > 0 && current_level == max_level
 
     best_feature = get_best_feature_info_gains(features, examples)
-    subset = get_all_that_fits_feature(best_feature, examples)
     node = DecisionTree.new(current_level, best_feature)
 
     Name.possible_values(best_feature).each do |val|
+      subset = get_all_that_fits_feature_and_value(best_feature, val, examples)
+
       if subset.size == 0
         node.children[val] = DecisionTree.new(current_level, get_most_common_label(examples))
       else
@@ -79,11 +75,12 @@ class DecisionTree
   ## Helper method. Returns true if all the examples have the same label
   def self.examples_have_same_label?(examples)
     label = examples[0].label
-    examples.each do |example|
-      return false if example.label != label
-    end
+    flag = true
 
-    true
+    examples.each do |e|
+      flag = false if e.label != label
+    end
+    flag
   end
 
   ## Returns the best feature in the collection that matches the most examples
@@ -126,8 +123,8 @@ class DecisionTree
   def self.get_most_common_label(examples)
     pluses = 0
     examples.each { |e| pluses += 1 if e.label == :+}
-    
-    if pluses >= examples.size / 2
+
+    if pluses > examples.size / 2
       :+
     else
       :-

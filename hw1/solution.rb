@@ -2,6 +2,7 @@
 
 # Solution to HW 1 for CS 5350
 require 'thor'
+require 'faker'
 
 require_relative 'decision_tree'
 require_relative 'name'
