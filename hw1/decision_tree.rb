@@ -144,20 +144,3 @@ class DecisionTree
     Math::log(number, 2)
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

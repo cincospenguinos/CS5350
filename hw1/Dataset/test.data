@@ -1,120 +1,111 @@
-- Wil van der Aalst
-+ Scott Aaronson
-- Hal Abelson
-- Serge Abiteboul
-- Samson Abramsky
-- Leonard Adleman
-- Manindra Agrawal
-+ Luis von Ahn
-+ Alfred Aho
-+ Frances E. Allen
-- Gene Amdahl
-+ David P. Anderson
-+ Andrew Appel
-+ Cecilia R. Aragon
-+ Bruce Arden
-- Sanjeev Arora
-+ Winifred "Tim" Alice Asprey
-- John Vincent Atanasoff
-+ Charles Babbage
-+ Charles Bachman
-- Roland Carl Backhouse
-- John Backus
-- David F. Bacon
-- David A. Bader
-- Victor Bahl
-+ Anthony James Barr
-- Jean Bartik
-+ Andrew Barto
-- Rudolf Bayer
-+ James C. Beatty
-- Gordon Bell
-+ Steven M. Bellovin
-- Tim Berners-Lee
-- Daniel J. Bernstein
-- Peter Bernus
-- Dines Bjørner
-- Gerrit Blaauw
-- Sue Black
-- David Blei
-- Dorothy Blum
-- Lenore Blum
-- Manuel Blum
-- Barry Boehm
-- Corrado Bohm
-- Kurt Bollacker
-- Jeff Bonwick
-- Grady Booch
-+ George Boole
-- Andrew Booth
-+ Kathleen Booth
-- Anita Borg
-+ Bert Bos
-+ Jonathan Bowen
-- Stephen R. Bourne
-+ Harry Bouwman
-- Robert S. Boyer
-+ Jack E. Bresenham
-+ Sergey Brin
-+ David J. Brown
-- Per Brinch Hansen
-- Sjaak Brinkkemper
-- Fred Brooks
-+ Rod Brooks
-+ Michael Butler
-+ Lee Calcote
-- Tracy Camp
-+ Martin Campbell-Kelly
-+ Rosemary Candlin
-- Bryan Cantrill
-+ Luca Cardelli
-- Edwin Catmull
-+ Vinton Cerf
-- Gregory Chaitin
-- Zhou Chaochen
-+ Peter Chen
-- Alonzo Church
-- Edmund M. Clarke
-+ John Cocke
-- Edgar F. Codd
-+ Jacques Cohen
-+ Simon Colton
-- Alain Colmerauer
-+ Paul Justin Compton
-+ Gordon Cormack
-- Stephen Cook
-+ James Cooley
-+ Danese Cooper
-- Fernando J. Corbató
-+ Patrick Cousot
-- Ingemar Cox
-+ Seymour Cray
-+ Nello Cristianini
-+ Jon Crowcroft
-+ W. Bruce Croft
-- Glen Culler
-+ Haskell Curry
-- Ole-Johan Dahl
-- Ryan Dahl
-- Andries van Dam
-+ Samir Das
-- Christopher J. Date
-+ Jeff Dean
-- Erik Demaine
-+ Tom DeMarco
-+ Richard DeMillo
-+ Dorothy E. Denning
-+ Peter J. Denning
-+ Michael Dertouzos
-- Alexander Dewdney
-+ Vinod Dham
++ Jonathan James
++ Betty Holberton
 + Jan Dietz
-- Whitfield Diffie
++ David Liddle
+- Arne Sølvberg
++ Rasmus Lerdorf
+- Janet L. Kolodner
++ Gordon Cormack
++ Nello Cristianini
++ Godfried Toussaint
++ Max Levchin
+- Andrew Koenig
+- Gábor Tardos
++ Raphael Finkel
+- Tom M. Mitchell
+- Robert M. Graham
+- Steve Ward
+- Marshall Kirk McKusick
+- Eric Horvitz
+- Eldon C. Hall
++ Gerard Holzmann
+- Edward Felten
+- Gregor Kiczales
++ Haskell Curry
+- Edward D. Lazowska
++ Anthony James Barr
+- Eric Hehner
+- Fernando J. Corbató
++ Seinosuke Toda
+- Amir Pnueli
++ Neil J. Gunther
++ Murray Turoff
++ Ian Goldberg
+- Oren Etzioni
++ David J. Brown
++ Silvio Micali
+- Cliff Jones
++ John Henry Holland
+- Steve Lawrence
+- Aravind K. Joshi
++ Jeff Dean
++ Jon Postel
++ Leslie Valiant
++ Lambert Meertens
++ Gillian Lovegrove
++ Richard Stallman
+- Steve Whittaker
++ Mathai Joseph
++ John Hughes
++ Rudy Rucker
++ Charles Bachman
++ C. A. R. Hoare
+- Andrew Chi-Chih Yao
+- Claude Sammut
+- Grady Booch
+- Chris Lattner
++ Marvin Minsky
++ James H. Wilkinson
++ Danny Hillis
++ Larry Stockmeyer
+- Robert Tappan Morris
+- Alex Helwani
++ Larry Page
++ Roger Needham
++ Lee Calcote
++ Bernard de Neumann
++ Gernot Heiser
++ Sally Floyd
+- Umar Saif
++ Linus Torvalds
+- William H. Press
++ Dan Ingalls
++ Klara Dan von Neumann
++ Philipp Matthäus Hahn
++ Jie Wu
+- Andrew McCallum
++ Simon Peyton Jones
++ Dorothy Vaughan
+- John Presper Eckert
 - Edsger Dijkstra
-- Alan Dix
-+ Jack Dongarra
-+ Marco Dorigo
-+ Paul Dourish
-- Charles Stark Draper
-+ Susan Dumais
-- Adam Dunkels
++ Derek McAuley
++ Manfred K. Warmuth
++ Jeff Rulifson
++ Wim Ebbinkhuijsen
+- Joyce K. Reynolds
++ David E. Shaw
++ John Mashey
++ Ramesh Jain
++ Jacques Cohen
++ Corrado Bohm
++ Kevin Leyton-Brown
+- Edward Feigenbaum
++ Tom Maibaum
+- Edgar F. Codd
++ Douglas McIlroy
++ Martin Hellman
++ Peter Naur
+- Manny M Lehman
++ Gerard Salton
++ John Hopcroft
+- Daniel P. Friedman
+- Ivan Sutherland
+- Whitfield Diffie
+- Peter J. Weinberger
++ Mary Jane Irwin
++ Judea Pearl
++ Manuel Blum
+- Thomas Sterling
++ Patrick Winston
+- Stephen Cole Kleene
++ J Strother Moore

@@ -60,7 +60,7 @@ def run_tests_on_depth(depths, features)
     training_failure = test_against(training_data, tree)
     test_failure = test_against(test_data, tree)
 
-    if depth == -1
+    if tree.max_depth != depth
       puts "#{tree.max_depth}\t#{training_failure}\t#{test_failure}" 
     else
       puts "#{depth}\t#{training_failure}\t#{test_failure}"
@@ -68,7 +68,23 @@ def run_tests_on_depth(depths, features)
   end
 end
 
-depths = [ 1, 2, 3, 4, 5, -1 ]
+# TODO: Train on the complete training.data file and report error on test.data and maximum depth
+puts 'Training on full set'
+
+training_data = gather_data('Dataset/training.data')
+test_data = gather_data('Dataset/test.data')
+
+tree = DecisionTree.learn(training_data, Name.given_features, Name.acceptable_labels, -1)
+failure = test_against(training_data, tree)
+puts "Training Failure:\t#{failure}"
+failure = test_against(test_data, tree)
+puts "Test Failure:\t#{failure}"
+puts "Depth:\t#{tree.max_depth}"
+
+# TODO: Limit depth with 4-fold cross-validation. Report accuracy and standard deviation. Report what depth is best, and why.
+# TODO: After figuring out the ideal depth, train at that depth against the entire training.data file. Report accuracy on test.data.
+
+depths = [ 1, 2, 3, 4, 5, 10, -1 ]
 
 puts 'Given Features'
 puts "Depth\tTrain Error\tTest Error"

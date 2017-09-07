@@ -1,109 +1,111 @@
-+ Peter Eades
-- Annie J. Easley
-+ Wim Ebbinkhuijsen
-- John Presper Eckert
+- Fred Brooks
++ Harry Bouwman
++ Mihai Pătraşcu
++ Hans Zantema
++ Peter J. Denning
 - Brendan Eich
-- Philip Emeagwali
-+ E. Allen Emerson
-+ Douglas Engelbart
-+ David Eppstein
-- Andrey Ershov
-+ Don Estridge
-- Oren Etzioni
-- Christopher Riche Evans
-+ David C. Evans
-- Shimon Even
-- Scott Fahlman
-- Edward Feigenbaum
-- Edward Felten
-+ Tim Finin
-+ Raphael Finkel
-+ Donald Firesmith
-+ Gary William Flake
-+ Tommy Flowers
-+ Robert Floyd
-+ Sally Floyd
-- Lawrence J. Fogel
-+ James D. Foley
-+ Ken Forbus
-+ Lance Fortnow
-+ Martin Fowler
-- Herbert W. Franke
-- Edward Fredkin
-+ Yoav Freund
-- Daniel P. Friedman
-+ Ping Fu
-+ Richard Gabriel
-- V. K. Govindan
-- Zvi Galil
-+ Bernard Galler
-+ Hector Garcia-Molina
-+ Michael Garey
 + Hugo de Garis
-+ Bill Gates
-+ David Gelernter
-- Charles Geschke
-+ Zoubin Ghahramani
-+ Juan E. Gilbert
-+ Lee Giles
-+ Seymour Ginsburg
-- Robert L. Glass
-+ Kurt Gödel
-+ Joseph Goguen
-- Adele Goldberg
-- Andrew V. Goldberg
-+ Ian Goldberg
-- Oded Goldreich
-- Shafi Goldwasser
-+ Gene Golub
-- Martin Charles Golumbic
-+ Gastón Gonnet
-+ James Gosling
-+ Paul Graham
-- Robert M. Graham
-- Susan L. Graham
-+ Jim Gray
-- Sheila Greibach
-+ Ralph Griswold
-+ Bill Gropp
-+ Tom Gruber
-- Ramanathan V. Guha
-+ Neil J. Gunther
-- Peter G. Gyarmati
-+ Philipp Matthäus Hahn
-- Eldon C. Hall
-+ Wendy Hall
-+ Joseph Halpern
++ Bernard Galler
+- Andries van Dam
++ Mihalis Yannakakis
++ Ramesh Sitaraman
++ James Martin
++ David A. Patterson
+- Claude Shannon
+- Anil K. Jain
++ John Koza
+- Ada Lovelace
++ Seymour Cray
++ Douglas Lenat
++ George Novacky
+- Shlomo Zilberstein
+- Éva Tardos
 + Margaret Hamilton
 + Richard Hamming
-+ Jiawei Han
-+ Juris Hartmanis
-+ Johan Håstad
-+ Les Hatton
-- Igor Hawryszkiewycz
-+ He Jifeng
-- Eric Hehner
-+ Martin Hellman
-- Alex Helwani
-+ Gernot Heiser
-+ James Hendler
-- John L. Hennessy
-- Andrew Herbert
-+ Carl Hewitt
-+ Danny Hillis
-+ Geoffrey Hinton
++ Tom Lane
++ Bernhard Thalheim
++ Patrick Cousot
++ Dorothy E. Denning
+- Stephen Cook
++ Gerald Jay Sussman
+- John P. Moon
++ Joshua Lederberg
++ W. Richard Stevens
++ Jerre Noe
++ Donald Firesmith
++ Tommy Flowers
++ Carroll Morgan
++ Rajeev Motwani
++ Mark Weiser
++ William Wulf
+- Richard J. Lipton
+- Roland Carl Backhouse
++ Ron Rivest
+- Mary Allen Wilkes
++ Peter Eades
++ Yann LeCun
+- Glen Culler
++ Richard DeMillo
++ Richard Gabriel
+- Edmund M. Clarke
+- Andrey Ershov
 + Julia Hirschberg
-+ C. A. R. Hoare
-+ Betty Holberton
-+ John Henry Holland
-+ Herman Hollerith
-+ Gerard Holzmann
-+ John Hopcroft
-- Admiral Grace Hopper
-- Eric Horvitz
-- Alston Householder
++ Johan Håstad
++ David Waltz
++ Valerie Taylor
+- Thomas E. Kurtz
+- Shimon Even
++ John McCarthy
++ Carl Sassenrath
+- Brian Kernighan
++ Makoto Nagao
++ John Tukey
++ Martin Fowler
+- François Vernadat
++ Jan Weglarz
+- Edward Fredkin
++ Daniel J. Bernstein
+- Allen Newell
+- Franco Preparata
++ Jack Dongarra
++ Nancy Lynch
+- Alan Kay
++ Vinod Dham
+- Jeffrey D. Ullman
++ John von Neumann
++ Gene Golub
++ Dan Klein
+- Wil van der Aalst
 + Paul Hudak
-+ David A. Huffman
-+ John Hughes
-+ Watts Humphrey
-+ Jean Ichbiah
++ Gastón Gonnet
+- Cleve Moler
++ Sophie Wilson
++ Frances E. Allen
++ Michael Dertouzos
++ Wilhelm Schickard
++ Rapelang Rabana
+- Ole-Johan Dahl
++ Kenneth E. Iverson
++ Bert Sutherland
++ Butler W. Lampson
+- Maurice Vincent Wilkes
+- Andrew V. Goldberg
++ Joseph Weizenbaum
++ Dennis Ritchie
++ Andrew Appel
+- Ivar Jacobson
++ Scott Aaronson
++ Poul-Henning Kamp
++ David Pearson
+- Zhou Chaochen
++ Martin Odersky
+- David A. Bader
++ Charles Babbage
++ Ping Fu
++ Luis von Ahn
+- Tracy Camp
++ Paritosh Pandya
+- Robert L. Glass
+- Alston Householder
+- Steven M. Bellovin
+- Hal Abelson
