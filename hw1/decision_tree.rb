@@ -1,17 +1,14 @@
 # decision_tree.rb
-#require 'byebug'
 
 # Class representing a decision tree for this specific assignment.
 class DecisionTree
 
   attr_accessor :guess # Either a guess (it's a leaf) or the feature to check
   attr_accessor :children
-  attr_accessor :level
 
 
-  def initialize(level, guess)
+  def initialize(guess)
     @guess = guess
-    @level = level
     @children = {}
   end
 
@@ -42,6 +39,8 @@ class DecisionTree
     return id3(examples, features, @@acceptable_labels[1], 1, max_level)
   end
 
+  private
+
   def self.information_gain(complete_set, feature)
     sum = 0.0 # This is our sum of the weighted entropies
 
@@ -56,22 +55,20 @@ class DecisionTree
     gain
   end
 
-  private
-
   ## Returns a decision tree from the examples and given features
   def self.id3(examples, features, target_label, current_level, max_level)
-    return DecisionTree.new(current_level, examples[0].label) if examples_have_same_label?(examples)
-    return DecisionTree.new(current_level, get_most_common_label(examples)) if features.length == 0
-    return DecisionTree.new(current_level, get_most_common_label(examples)) if max_level > 0 && current_level == max_level
+    return DecisionTree.new(examples[0].label) if examples_have_same_label?(examples)
+    return DecisionTree.new(get_most_common_label(examples)) if features.length == 0
+    return DecisionTree.new(get_most_common_label(examples)) if max_level > 0 && current_level == max_level
     
     best_feature = get_best_feature_info_gains(features, examples)
-    node = DecisionTree.new(current_level, best_feature)
+    node = DecisionTree.new(best_feature)
 
     Name.possible_values(best_feature).each do |val|
       subset = get_all_that_fits_feature_and_value(best_feature, val, examples)
 
       if subset.size == 0
-        node.children[val] = DecisionTree.new(current_level, get_most_common_label(examples))
+        node.children[val] = DecisionTree.new(get_most_common_label(examples))
       else
         node.children[val] = id3(subset, features - [ best_feature ], target_label, current_level + 1, max_level)
       end

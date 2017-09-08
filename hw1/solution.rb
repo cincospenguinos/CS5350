@@ -51,6 +51,10 @@ def test_against(data, tree)
   errors.to_f / data.size.to_f
 end
 
+def test_on_depth(depth, features)
+
+end
+
 def run_tests_on_depth(depths, features)
   training_data = gather_data('Dataset/training.data')
   test_data = gather_data('Dataset/test.data')
@@ -68,8 +72,25 @@ def run_tests_on_depth(depths, features)
   end
 end
 
-# TODO: Train on the complete training.data file and report error on test.data and maximum depth
-puts 'Training on full set'
+def accuracy(error)
+  1.0 - error
+end
+
+def standard_deviation(data)
+  mean = 0.0
+  data.each { |d| mean += d.to_f }
+  mean /= data.size.to_f
+
+  data = data.clone
+  data.each { |d| d = (d - mean)**2 }
+
+  std_dev = 0
+  data.each { |d| std_dev += d }
+  std_dev / (data.size - 1).to_f
+  Math.sqrt(std_dev)
+end
+
+puts '### Training on full set ###'
 
 training_data = gather_data('Dataset/training.data')
 test_data = gather_data('Dataset/test.data')
@@ -79,21 +100,53 @@ failure = test_against(training_data, tree)
 puts "Training Failure:\t#{failure}"
 failure = test_against(test_data, tree)
 puts "Test Failure:\t#{failure}"
-puts "Depth:\t#{tree.max_depth}"
+puts "Depth:\t#{tree.max_depth}\n\n"
 
-# TODO: Limit depth with 4-fold cross-validation. Report accuracy and standard deviation. Report what depth is best, and why.
-# TODO: After figuring out the ideal depth, train at that depth against the entire training.data file. Report accuracy on test.data.
+# TODO: Limit depth with 4-fold cross-validation. Report accuracy and standard deviation for each depth. Report what depth is best, and why.
+puts '### 4-Fold Cross Validation ###'
+depths = [ 1, 2, 3, 4, 5, 10, tree.max_depth ]
 
-depths = [ 1, 2, 3, 4, 5, 10, -1 ]
+path = 'Dataset/CVSplits/training0'
+scores = {} # depth => [ score on 0, score on 1, score on 2, score on 3 ]
 
-puts 'Given Features'
-puts "Depth\tTrain Error\tTest Error"
-run_tests_on_depth(depths, Name.given_features)
+depths.each do |depth|
+  4.times do |validator_idx|
+    data = []
+    validator = gather_data(path + validator_idx.to_s + '.data')
 
-puts "\nProposed Features"
-puts "Depth\tTrain Error\tTest Error"
-run_tests_on_depth(depths, Name.proposed_features)
+    4.times do |data_collection|
+      next if data_collection == validator_idx
+      data += gather_data(path + data_collection.to_s + '.data')
+    end
 
-puts "\nAll Features"
-puts "Depth\tTrain Error\tTest Error"
-run_tests_on_depth(depths, Name.all_features)
+    tree = DecisionTree.learn(data, Name.given_features, Name.acceptable_labels, depth)
+    true_depth = [ depth, tree.max_depth ].min
+
+    score = test_against(validator, tree)
+
+    scores[true_depth] = [] if scores[true_depth].nil?
+    scores[true_depth] << score
+  end
+end
+
+puts "Depth\tValidator 0\tValidator 1\tValidator 2\tValidator 3\tStandard Deviation"
+
+scores.each { |depth, values| puts "#{depth}\t#{accuracy(values[0])}\t#{accuracy(values[1])}\t#{accuracy(values[2])}\t#{accuracy(values[3])}\t#{standard_deviation(values)}" }
+
+puts "\n"
+
+# The ideal depth is 5. Let's try it out and compare to the original tree
+puts '### Training at ideal depth ###'
+
+tree = DecisionTree.learn(training_data, Name.given_features, Name.acceptable_labels, 5)
+failure = test_against(training_data, tree)
+puts "Training Failure:\t#{failure}"
+failure = test_against(test_data, tree)
+puts "Test Failure:\t#{failure}"
+puts "Accuracy:\t#{accuracy(failure)}"
+
+
+
+
+
+
