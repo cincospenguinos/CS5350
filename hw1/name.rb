@@ -49,25 +49,70 @@ class Name
     last_name.length % 2 == 0
   end
 
+  #### Here's other features I decided to add to push the decision tree up to over twenty features
+
+  def first_name_first_letter_is_a
+    first_name[0] == 'a'
+  end
+
+  def first_name_first_letter_is_b
+    first_name[0] == 'b'
+  end
+
+  def first_name_first_letter_is_c
+    first_name[0] == 'c'
+  end
+
+  def first_name_first_letter_is_d
+    first_name[0] == 'd'
+  end
+
+  def first_name_first_letter_is_e
+    first_name[0] == 'e'
+  end
+
+  def first_name_first_letter_is_f
+    first_name[0] == 'f'
+  end
+
+  def first_name_first_letter_is_g
+    first_name[0] == 'g'
+  end
+
+  def first_name_first_letter_is_h
+    first_name[0] == 'h'
+  end
+
+  def first_name_first_letter_is_i
+    first_name[0] == 'i'
+  end
+
+  def first_name_first_letter_is_j
+    first_name[0] == 'j'
+  end
+
+  def first_name_first_letter_is_k
+    first_name[0] == 'k'
+  end
+
   #### Here's some features I came up with ####
-
-  def letter_first_name_first_letter
-    raise RuntimeError, "#{first_name[0]} is not a valid letter! #{@full_name}" unless @@LETTERS.include?(first_name[0])
-    first_name[0]
-  end
-
-  def first_name_starts_with_vowel
-    @@VOWELS.include?(first_name[0])
-  end
 
   def letter_first_name_second_letter
     raise RuntimeError, "#{first_name[1]} is not a valid letter! #{@full_name}" unless @@LETTERS.include?(first_name[1])
     first_name[1]
   end
 
-  def cmp_first_and_second_letters_of_first_name
-    first_name[0] <=> first_name[1]
+  def first_name_starts_with_vowel
+    @@VOWELS.include?(first_name[0])
   end
+
+  def last_name_starts_with_consonant
+    !@@VOWELS.include?(last_name[0])
+  end
+
+  def last_name_ends_with_vowel
+    @@VOWELS.include?(first_name[-1])
+  end  
 
   ## class method checking to see if the provided label is acceptable
   def self.acceptable_label?(label)
@@ -77,8 +122,6 @@ class Name
   def self.possible_values(feature)
     if letter_features.include?(feature)
       @@LETTERS.clone.freeze
-    elsif feature.to_s.start_with?('cmp')
-      [-1, 0, 1].freeze
     else
       @@BINARY.clone.freeze
     end

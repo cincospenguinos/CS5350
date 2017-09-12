@@ -95,21 +95,23 @@ puts '### Training on full set ###'
 training_data = gather_data('Dataset/training.data')
 test_data = gather_data('Dataset/test.data')
 
-tree = DecisionTree.learn(training_data, Name.given_features, Name.acceptable_labels, -1)
+tree = DecisionTree.learn(training_data, Name.all_features, Name.acceptable_labels, -1)
 failure = test_against(training_data, tree)
 puts "Training Failure:\t#{failure}"
 failure = test_against(test_data, tree)
 puts "Test Failure:\t#{failure}"
-puts "Depth:\t#{tree.max_depth}\n\n"
+max_depth = tree.max_depth
+puts "Depth:\t#{max_depth}\n\n"
 
-# TODO: Limit depth with 4-fold cross-validation. Report accuracy and standard deviation for each depth. Report what depth is best, and why.
+# Limit depth with 4-fold cross-validation. Report accuracy and standard deviation for each depth. Report what depth is best, and why.
 puts '### 4-Fold Cross Validation ###'
-depths = [ 1, 2, 3, 4, 5, 10, tree.max_depth ]
+depths = [ 1, 2, 3, 4, 5, 10, 15, 20, max_depth ]
 
 path = 'Dataset/CVSplits/training0'
 scores = {} # depth => [ score on 0, score on 1, score on 2, score on 3 ]
 
 depths.each do |depth|
+  puts "Testing out depth #{depth}..."
   4.times do |validator_idx|
     data = []
     validator = gather_data(path + validator_idx.to_s + '.data')
@@ -119,7 +121,7 @@ depths.each do |depth|
       data += gather_data(path + data_collection.to_s + '.data')
     end
 
-    tree = DecisionTree.learn(data, Name.given_features, Name.acceptable_labels, depth)
+    tree = DecisionTree.learn(data, Name.all_features, Name.acceptable_labels, depth)
     true_depth = [ depth, tree.max_depth ].min
 
     score = test_against(validator, tree)
@@ -135,10 +137,20 @@ scores.each { |depth, values| puts "#{depth}\t#{accuracy(values[0])}\t#{accuracy
 
 puts "\n"
 
-# The ideal depth is 5. Let's try it out and compare to the original tree
+ideal_depth = -1
+highest_accuracy = 0.0
+
+scores.each do |depth, errors|
+  if highest_accuracy < accuracy(errors.min)
+      ideal_depth = depth
+      highest_accuracy = accuracy(errors.min)
+    end
+end
+
+puts "Ideal depth is #{ideal_depth}\n\n"
 puts '### Training at ideal depth ###'
 
-tree = DecisionTree.learn(training_data, Name.given_features, Name.acceptable_labels, 5)
+tree = DecisionTree.learn(training_data, Name.all_features, Name.acceptable_labels, ideal_depth)
 failure = test_against(training_data, tree)
 puts "Training Failure:\t#{failure}"
 failure = test_against(test_data, tree)
