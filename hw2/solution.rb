@@ -1,5 +1,8 @@
 # solution.rb
 
+require 'thread'
+require 'thwait'
+
 require_relative 'example'
 require_relative 'perceptron'
 
@@ -43,14 +46,12 @@ end
 
 ## Returns the ideal hyper parameter given the perceptron flavor and the set of hyper_parameters
 def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
-  puts "Ideal Hyper Param for #{flavor}\n"
-
-  shuffle_param = Random.new(25)
+  # puts "Ideal Hyper Param for #{flavor}\n"
+  shuffle_param = Random.new(14)
   mistakes = {}
 
   # Five-fold cross validation
   5.times do |test_index|
-    puts "#{test_index}..."
     training_examples = []
     i = (test_index + 1) % 5
 
@@ -61,32 +62,54 @@ def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
 
     test_examples = get_examples_from("Dataset/CVSplits/training0#{test_index}.data")
 
-    epochs.times do
+    if flavor == :margin_perceptron
+      learning_rates = hyper_parameters[0]
+      margins = hyper_parameters[1]
+
+      learning_rates.each do |rate|
+        margins.each do |m|
+          perceptron = Perceptron.new(rate, m)
+
+          epochs.times do
+            perceptron.send(flavor, training_examples.shuffle(random:shuffle_param))
+            test_examples.each { |e| perceptron.test_for(e) }
+          end
+
+          mistakes[perceptron.mistakes] = [rate, m]
+        end
+      end
+    else
       hyper_parameters.each do |hyper_param|
         perceptron = Perceptron.new(hyper_param)
-        perceptron.send(flavor, training_examples.shuffle(random:shuffle_param))
-        test_examples.each { |e| perceptron.test_for(e) }
+
+        epochs.times do
+          perceptron.send(flavor, training_examples.shuffle(random:shuffle_param))
+          test_examples.each { |e| perceptron.test_for(e) }
+        end
 
         mistakes[perceptron.mistakes] = hyper_param
       end
     end
-
-    
   end
 
   mistakes[mistakes.keys.min]
 end
 
-# TODO:  Run cross validation for ten epochs for each hyper-parameter combination to get the 
-# best hyper-parameter setting.
+# Five-Fold cross validation to find the ideal hyper parameter for each flavor
+puts '### FIVE FOLD CROSS VALIDATION ###'
+puts 'This might take a while...'
 hyper_params = {}
 
 Perceptron.all_flavors.each do |flavor|
+  param = nil
+
   if Perceptron.single_hyper_param_flavors.include?(flavor)
-    hyper_params[flavor] = ideal_hyper_parameter([1, 0.1, 0.01], flavor)
+    param = ideal_hyper_parameter([1, 0.1, 0.01], flavor)
   else
-    # TODO: This
+    param = ideal_hyper_parameter([ [1, 0.1, 0.01], [1, 0.1, 0.01] ] , flavor)
   end
+
+  hyper_params[flavor] = param
 end
 
 puts hyper_params.inspect

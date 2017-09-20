@@ -9,33 +9,50 @@ class Perceptron
   attr_reader :mistakes
   attr_reader :tests
 
-  def initialize(learning_rate)
+  def initialize(learning_rate, margin=nil)
     @learning_rate = learning_rate.to_f
     @weights = [ 1.0 ] # The first element is the bias weight
+
+    # For dynamic learning rate
+    @time_step = 0
+    @initial_learning_rate = learning_rate.to_f
+
+    # For margin
+    @margin = margin
+
+    # For testing
     @mistakes = 0
     @tests = 0
   end
 
-  ## Perceptron algorithms
+  ##### Perceptron algorithms #####
 
+  ## Simple version of perceptron
   def simple_perceptron(examples)
     perceptron(examples) do |example|
       [ @weights.size, example.size ].min.times { |i| @weights[i] += @learning_rate * example.label * example.features[i] }
     end
   end
 
+  ## Dynamic learning rate perceptron
   def dynamic_learning_perceptron(examples)
-    perceptron do |example|
-      # TODO: This
+    perceptron(examples) do |example|
+      @learning_rate = @initial_learning_rate / (1 + @time_step)
+      [ @weights.size, example.size ].min.times { |i| @weights[i] += @learning_rate * example.label * example.features[i] }
     end
   end
 
+  ## Margin form of perceptron
   def margin_perceptron(examples)
-    # perceptron do
-    #   raise RuntimeError, 'Implement this!'
-    # end
+    perceptron(examples) do |example|
+      if weight_product(example) < @margin
+        @learning_rate = @initial_learning_rate / (1 + @time_step)
+        [ @weights.size, example.size ].min.times { |i| @weights[i] += @learning_rate * example.label * example.features[i] }
+      end
+    end
   end
 
+  ## TODO: This
   def averaged_perceptron(examples)
     # perceptron do
     #   raise RuntimeError, 'Implement this!'
@@ -51,7 +68,7 @@ class Perceptron
   end
 
   def self.all_flavors
-    Perceptron.instance_methods(false) - [ :learning_rate, :weights, :mistakes, :tests, :test_for ]
+    Perceptron.instance_methods(false) - [ :learning_rate, :weights, :mistakes, :tests, :test_for, :reset ]
   end
 
   def self.single_hyper_param_flavors
@@ -60,27 +77,29 @@ class Perceptron
 
   ## Other methods
 
-  private
-
   ## Resets the perceptron instance so we get a new setup for each run
   def reset
     @weights.each { |i| @weights[i] = 0.0 }
     @weights[0] = 1.0
+
     @mistakes = 0
     @tests = 0
   end
 
+  private
+
   # The perceptron algorithm that runs the show
   def perceptron(training_examples)
-    reset # To ensure that this instance doesn't have weights that stomp on each other
     training_examples.each do |example|
-      yield example if is_mistake(example)
+      yield example if !@margin.nil? || is_mistake(example)
+      @time_step += 1
     end
 
     @weights
   end
 
   def weight_product(example)
+    setup_weights(example)
     raise RuntimeError, 'Size of weights should be greater than example' if example.size > @weights.size
     product = 0.0
     [ @weights.size, example.size ].min.times { |i| product += @weights[i] * example.features[i] }
@@ -88,9 +107,12 @@ class Perceptron
   end
 
   def is_mistake(example)
+    example.label * weight_product(example) <= 0.0
+  end
+
+  def setup_weights(example)
     while @weights.size < example.size do
       @weights << 0.0 
     end
-    example.label * weight_product(example) <= 0.0
   end
 end
