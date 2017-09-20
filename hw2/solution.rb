@@ -28,8 +28,7 @@ File.foreach('Dataset/phishing.dev') do |line|
   examples << e
 end
 
-# puts examples.inspect
-perceptron = Perceptron.new(0.1)
+perceptron = Perceptron.new(1.0)
 perceptron.simple_perceptron(examples)
 puts perceptron.weights.inspect
 
