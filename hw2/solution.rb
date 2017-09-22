@@ -1,7 +1,5 @@
 # solution.rb
-
-require 'thread'
-require 'thwait'
+require 'byebug'
 
 require_relative 'example'
 require_relative 'perceptron'
@@ -25,7 +23,7 @@ def get_examples_from(filename)
       j = value_pair.split(':')[0].to_f
       
       while i < j do 
-        e << 0 
+        e << 0
         i += 1
       end
 
@@ -40,8 +38,13 @@ def get_examples_from(filename)
 end
 
 ## Tests against the file passed using the perceptron provided
-def test_against(perceptron, file_name)
-  # TODO: This
+def test_against(perceptron, examples)
+  examples.each do |e|
+    # byebug
+    perceptron.test_for(e)
+  end
+
+  perceptron.accuracy
 end
 
 ## Returns the ideal hyper parameter given the perceptron flavor and the set of hyper_parameters
@@ -62,13 +65,15 @@ def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
 
     test_examples = get_examples_from("Dataset/CVSplits/training0#{test_index}.data")
 
+    options = {}
+
     if flavor == :margin_perceptron
       learning_rates = hyper_parameters[0]
       margins = hyper_parameters[1]
 
       learning_rates.each do |rate|
         margins.each do |m|
-          perceptron = Perceptron.new(rate, m)
+          perceptron = Perceptron.new(rate, { margin: m, every_step: true})
 
           epochs.times do
             perceptron.send(flavor, training_examples.shuffle(random:shuffle_param))
@@ -81,6 +86,7 @@ def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
     else
       hyper_parameters.each do |hyper_param|
         perceptron = Perceptron.new(hyper_param)
+        perceptron = Perceptron.new(hyper_param, {every_step: true, averaged_perceptron: true}) if flavor == :averaged_perceptron
 
         epochs.times do
           perceptron.send(flavor, training_examples.shuffle(random:shuffle_param))
@@ -97,10 +103,10 @@ end
 
 # Five-Fold cross validation to find the ideal hyper parameter for each flavor
 puts '### FIVE FOLD CROSS VALIDATION ###'
-puts 'This might take a while...'
 hyper_params = {}
 
 Perceptron.all_flavors.each do |flavor|
+  puts "Trying out #{flavor}..."
   param = nil
 
   if Perceptron.single_hyper_param_flavors.include?(flavor)
@@ -112,11 +118,44 @@ Perceptron.all_flavors.each do |flavor|
   hyper_params[flavor] = param
 end
 
-puts hyper_params.inspect
+puts "Ideal hyper_params: #{hyper_params.inspect}"
 
 # TODO: Train the classifier for 20 epochs. At the end of each training epoch, you should measure
 # the accuracy of the classifier on the development set. For the averaged Perceptron,
 # use the average classifier to compute accuracy.
+
+puts '### TRAINING CLASSIFIERS FOR 20 EPOCHS ###'
+accuracies = {}
+perceptrons = {}
+random = Random.new(180716) # The date of my son's birthday
+training_data = get_examples_from('Dataset/phishing.train')
+development_data = get_examples_from('Dataset/phishing.dev')
+
+Perceptron.all_flavors.each do |flavor|
+  puts "Training #{flavor}"
+  accuracies[flavor] = {}
+  perceptron = nil
+
+  if flavor == :margin_perceptron
+    perceptron = Perceptron.new(hyper_params[flavor][0], { margin: hyper_params[flavor][1], every_step: true } )
+  elsif flavor == :averaged_perceptron
+    perceptron = Perceptron.new(hyper_params[flavor], { every_step: true, averaged_perceptron: true } )
+  else
+    perceptron = Perceptron.new(hyper_params[flavor])
+  end
+
+  20.times do |epoch|
+    print "#{epoch + 1}..."
+    perceptron.send(flavor, training_data.shuffle(random:random))
+    accuracies[flavor][epoch + 1] = test_against(perceptron, development_data)
+  end
+
+  print "\n"
+  perceptrons[flavor] = perceptron
+end
+
+puts "Flavor\tEpoch\tAccuracy"
+accuracies.each { |flavor, data| data.each { |epoch, accuracy| puts "#{flavor}\t#{epoch}\t#{accuracy}" } }
 
 # TODO: Use the classifier from the epoch where the development set accuracy is highest to
 # evaluate on the test set.
