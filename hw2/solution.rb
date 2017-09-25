@@ -4,9 +4,7 @@ require 'byebug'
 require_relative 'example'
 require_relative 'perceptron'
 
-raise RuntimeError, 'Only 4 potential flavors should be available!' if Perceptron.all_flavors.size != 4 # Quick sanity check
-
-# TODO: Look at assignment info about setting the bias, and do what it tells you in the Perceptron class
+raise RuntimeError, "Only 4 potential flavors should be available! - #{Perceptron.all_flavors}" if Perceptron.all_flavors.size != 4 # Quick sanity check
 
 ## Gets examples from file matching filename passed
 def get_examples_from(filename)
@@ -40,7 +38,6 @@ end
 ## Tests against the file passed using the perceptron provided
 def test_against(perceptron, examples)
   examples.each do |e|
-    # byebug
     perceptron.test_for(e)
   end
 
@@ -49,8 +46,8 @@ end
 
 ## Returns the ideal hyper parameter given the perceptron flavor and the set of hyper_parameters
 def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
-  # puts "Ideal Hyper Param for #{flavor}\n"
   shuffle_param = Random.new(14)
+  perceptron = nil
   mistakes = {}
 
   # Five-fold cross validation
@@ -64,8 +61,6 @@ def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
     end
 
     test_examples = get_examples_from("Dataset/CVSplits/training0#{test_index}.data")
-
-    options = {}
 
     if flavor == :margin_perceptron
       learning_rates = hyper_parameters[0]
@@ -93,16 +88,34 @@ def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
           test_examples.each { |e| perceptron.test_for(e) }
         end
 
-        mistakes[perceptron.mistakes] = hyper_param
+        mistakes[perceptron.accuracy] = hyper_param
       end
     end
   end
 
-  mistakes[mistakes.keys.min]
+  mistakes[mistakes.keys.max]
 end
 
+# Majority Baseline
+puts '### MAJORITY BASELINE ###'
+training_data = get_examples_from('Dataset/phishing.train')
+pluses = 0
+training_data.each { |e| pluses += 1 if e.label == 1 }
+majority_label = 1
+majority_label = -1 if pluses.to_f / training_data.size.to_f > 0.5
+
+errors = 0
+dev_data = get_examples_from('Dataset/phishing.dev')
+dev_data.each { |e| errors += 1 unless majority_label == e.label }
+puts "#{1 - (errors.to_f / dev_data.size.to_f)} accuracy on phishing.dev"
+
+errors = 0
+test_data = get_examples_from('Dataset/phishing.test')
+test_data.each { |e| errors += 1 unless majority_label == e.label }
+puts "#{1 - (errors.to_f / test_data.size.to_f)} accuracy on phishing.test"
+
 # Five-Fold cross validation to find the ideal hyper parameter for each flavor
-puts '### FIVE FOLD CROSS VALIDATION ###'
+puts "\n### FIVE FOLD CROSS VALIDATION ###"
 hyper_params = {}
 
 Perceptron.all_flavors.each do |flavor|
@@ -120,11 +133,11 @@ end
 
 puts "Ideal hyper_params: #{hyper_params.inspect}"
 
-# TODO: Train the classifier for 20 epochs. At the end of each training epoch, you should measure
+# Train the classifier for 20 epochs. At the end of each training epoch, you should measure
 # the accuracy of the classifier on the development set. For the averaged Perceptron,
 # use the average classifier to compute accuracy.
 
-puts '### TRAINING CLASSIFIERS FOR 20 EPOCHS ###'
+puts "\n### TRAINING CLASSIFIERS FOR 20 EPOCHS ###"
 accuracies = {}
 perceptrons = {}
 random = Random.new(180716) # The date of my son's birthday
@@ -147,15 +160,50 @@ Perceptron.all_flavors.each do |flavor|
   20.times do |epoch|
     print "#{epoch + 1}..."
     perceptron.send(flavor, training_data.shuffle(random:random))
-    accuracies[flavor][epoch + 1] = test_against(perceptron, development_data)
+    development_data.each { |e| perceptron.test_for(e) }
+    accuracies[flavor][epoch + 1] = perceptron.accuracy
+    perceptron.reset_testing
   end
 
   print "\n"
-  perceptrons[flavor] = perceptron
+  perceptrons[flavor] = perceptron.clone
 end
 
-puts "Flavor\tEpoch\tAccuracy"
-accuracies.each { |flavor, data| data.each { |epoch, accuracy| puts "#{flavor}\t#{epoch}\t#{accuracy}" } }
+herp = {}
+Perceptron.all_flavors.each { |flavor| herp[flavor] = [] }
+accuracies.each { |flavor, data| data.each { |epoch, accuracy| herp[flavor] << accuracy } }
+
+print "Epoch\t"
+herp.each { |flavor, data| print "#{flavor}\t" }
+print "\n"
+
+20.times do |i| 
+  print "#{i + 1}\t"
+  herp.each do |flavor, data|
+    print "#{data[i]}\t"
+  end
+  print "\n"
+end
 
 # TODO: Use the classifier from the epoch where the development set accuracy is highest to
 # evaluate on the test set.
+best_perceptron = nil
+highest_accuracy = 0.0
+best_epoch = nil
+accuracies.each do |flavor, data| 
+  data.each do |epoch, accuracy|
+    if accuracy > highest_accuracy
+      best_perceptron = flavor
+      best_epoch = epoch
+      highest_accuracy = accuracy
+    end
+  end
+end
+
+puts "#{best_perceptron} at epoch #{best_epoch} has highest accuracy of #{highest_accuracy}"
+best_perceptron = perceptrons[best_perceptron]
+best_perceptron.reset_testing
+test_data = get_examples_from('Dataset/phishing.test')
+test_data.each { |e| best_perceptron.test_for(e) }
+
+puts "Best perceptron gets #{best_perceptron.accuracy} on test set"
