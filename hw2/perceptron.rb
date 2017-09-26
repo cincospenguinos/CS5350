@@ -7,6 +7,7 @@ class Perceptron
   attr_reader :learning_rate
   attr_reader :weights
   attr_reader :averaged_weights
+  attr_reader :updates
   attr_reader :mistakes
   attr_reader :tests
 
@@ -26,6 +27,7 @@ class Perceptron
     # For dynamic learning rate
     @time_step = 0
     @initial_learning_rate = learning_rate.to_f
+    @updates = 0
 
     # For margin
     @margin = options[:margin] unless options[:margin].nil?
@@ -46,6 +48,7 @@ class Perceptron
   def simple_perceptron(examples)
     perceptron(examples) do |example|
       [ @weights.size, example.size ].min.times { |i| @weights[i] += @learning_rate * example.label * example.features[i] }
+      @updates += 1
     end
   end
 
@@ -54,6 +57,7 @@ class Perceptron
     perceptron(examples) do |example|
       @learning_rate = @initial_learning_rate.to_f / (1.0 + @time_step.to_f)
       [ @weights.size, example.size ].min.times { |i| @weights[i] += @learning_rate * example.label * example.features[i] }
+      @updates += 1
     end
   end
 
@@ -63,13 +67,17 @@ class Perceptron
       if weight_product(example) < @margin
         @learning_rate = @initial_learning_rate.to_f / (1.0 + @time_step.to_f)
         [ @weights.size, example.size ].min.times { |i| @weights[i] += @learning_rate * example.label * example.features[i] }
+        @updates += 1
       end
     end
   end
 
   def averaged_perceptron(examples)
     perceptron(examples) do |example|
-      [ @weights.size, example.size ].min.times { |i| @weights[i] += @learning_rate * example.label * example.features[i] } if is_mistake(example)
+      if is_mistake(example)
+        [ @weights.size, example.size ].min.times { |i| @weights[i] += @learning_rate * example.label * example.features[i] }
+        @updates += 1
+      end
       @averaged_weights.size.times { |i| @averaged_weights[i] += @weights[i] }
     end
 
@@ -89,7 +97,7 @@ class Perceptron
 
   def self.all_flavors
     Perceptron.instance_methods(false) - [ :learning_rate, :weights, :averaged_weights, :mistakes, 
-      :tests, :test_for, :reset_testing, :accuracy, :margin, :every_step ]
+      :tests, :test_for, :reset_testing, :accuracy, :margin, :every_step, :updates ]
   end
 
   def self.single_hyper_param_flavors

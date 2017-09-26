@@ -75,7 +75,7 @@ def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
             test_examples.each { |e| perceptron.test_for(e) }
           end
 
-          mistakes[perceptron.mistakes] = [rate, m]
+          mistakes[perceptron.accuracy] = [rate, m]
         end
       end
     else
@@ -93,6 +93,8 @@ def ideal_hyper_parameter(hyper_parameters, flavor, epochs=10)
     end
   end
 
+  puts "cross validation accuracy was #{mistakes.keys.max}"
+  puts "total updates: #{perceptron.updates}"
   mistakes[mistakes.keys.max]
 end
 
@@ -183,6 +185,16 @@ print "\n"
     print "#{data[i]}\t"
   end
   print "\n"
+end
+
+perceptrons.each do |flavor, perc|
+  perc.reset_testing
+  get_examples_from('Dataset/phishing.dev').each { |e| perc.test_for(e) }
+  puts "#{flavor} accuracy on dev: #{perc.accuracy}"
+
+  perc.reset_testing
+  get_examples_from('Dataset/phishing.test').each { |e| perc.test_for(e) }
+  puts "#{flavor} accuracy on test: #{perc.accuracy}"
 end
 
 # TODO: Use the classifier from the epoch where the development set accuracy is highest to
